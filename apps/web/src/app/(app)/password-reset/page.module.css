@@ -1,0 +1,101 @@
+/* Parola sıfırlama ekranları (8.4) — istek ve onay aynı stilleri paylaşıyor.
+   Ham değer YOK: yalnızca var(--u-*) token'ları. */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--u-space-5);
+}
+
+.card {
+  width: 100%;
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-4);
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-6);
+}
+
+.title {
+  font-size: var(--u-fs-xl);
+}
+
+.body {
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+  line-height: var(--u-lh-normal);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+}
+
+.label {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.input {
+  background-color: var(--u-surface-2);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-3);
+  color: var(--u-text);
+}
+
+.input:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+.fieldError {
+  font-size: var(--u-fs-xs);
+  color: var(--u-down);
+}
+
+.submit {
+  background-color: var(--u-accent);
+  color: var(--u-text-on-accent);
+  border: 1px solid var(--u-accent);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  font-weight: var(--u-fw-semibold);
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.submit:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+}
+
+.link {
+  color: var(--u-accent);
+  font-size: var(--u-fs-sm);
+  text-align: center;
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+  border-radius: var(--u-radius-sm);
+}

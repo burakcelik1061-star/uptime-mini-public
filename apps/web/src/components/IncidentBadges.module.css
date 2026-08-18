@@ -1,0 +1,73 @@
+/* Renk yalnızca İKONU boyuyor; metin gövde renginde kalıyor
+   (StatusBadge.module.css ile aynı kural — bkz. docs/0.2-design-system.md §3). */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u-space-2);
+  padding: var(--u-space-1) var(--u-space-3);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-full);
+  font-size: var(--u-fs-xs);
+  white-space: nowrap;
+  color: var(--u-text);
+}
+
+/* --- Durum ---------------------------------------------------------------- */
+
+.investigating {
+  background-color: var(--u-down-surface);
+}
+.investigating svg {
+  color: var(--u-down);
+}
+
+.identified {
+  background-color: var(--u-degraded-surface);
+}
+.identified svg {
+  color: var(--u-degraded);
+}
+
+.monitoring {
+  background-color: var(--u-accent-surface);
+}
+.monitoring svg {
+  color: var(--u-accent);
+}
+
+.resolved {
+  background-color: var(--u-up-surface);
+}
+.resolved svg {
+  color: var(--u-up);
+}
+
+/* --- Etki ----------------------------------------------------------------- */
+
+.impactNone {
+  background-color: var(--u-nodata-surface);
+}
+.impactNone svg {
+  color: var(--u-nodata);
+}
+
+.impactMinor {
+  background-color: var(--u-nodata-surface);
+}
+.impactMinor svg {
+  color: var(--u-text-muted);
+}
+
+.impactMajor {
+  background-color: var(--u-degraded-surface);
+}
+.impactMajor svg {
+  color: var(--u-degraded);
+}
+
+.impactCritical {
+  background-color: var(--u-down-surface);
+}
+.impactCritical svg {
+  color: var(--u-down);
+}

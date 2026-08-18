@@ -1,0 +1,5 @@
+# Derleme bağlamına girmesine gerek olmayanlar
+bin/
+*.exe
+.env
+.env.*

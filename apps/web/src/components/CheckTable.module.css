@@ -1,0 +1,98 @@
+.wrapper {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  /* Dar ekranda tablo SAYFAYI değil kendini kaydırsın. */
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--u-fs-sm);
+}
+
+.caption {
+  text-align: left;
+  padding: var(--u-space-4) var(--u-space-4) 0;
+  font-size: var(--u-fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--u-text-muted);
+}
+
+.table th {
+  text-align: left;
+  font-weight: var(--u-fw-medium);
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-xs);
+  padding: var(--u-space-3) var(--u-space-4);
+  border-bottom: 1px solid var(--u-border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--u-space-3) var(--u-space-4);
+  border-bottom: 1px solid var(--u-border);
+  vertical-align: top;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Sonuç renk + METİN: renk tek başına taşıyıcı sinyal değil. */
+.outcome {
+  display: inline-block;
+  padding: var(--u-space-1) var(--u-space-2);
+  border-radius: var(--u-radius-sm);
+  border: 1px solid var(--u-border);
+  font-size: var(--u-fs-xs);
+  white-space: nowrap;
+}
+
+.success {
+  background-color: var(--u-up-surface);
+  border-color: var(--u-up);
+}
+
+.degraded {
+  background-color: var(--u-degraded-surface);
+  border-color: var(--u-degraded);
+}
+
+.failure {
+  background-color: var(--u-down-surface);
+  border-color: var(--u-down);
+}
+
+.manual,
+.scheduled {
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.manual {
+  color: var(--u-maintenance);
+}
+
+.error {
+  color: var(--u-text-muted);
+  max-width: 22rem;
+}
+
+.errorMessage {
+  display: block;
+  color: var(--u-text-faint);
+  font-size: var(--u-fs-xs);
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  background-color: var(--u-surface-1);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-6);
+  text-align: center;
+  color: var(--u-text-muted);
+}

@@ -1,0 +1,58 @@
+/* Renk yalnızca İKONU boyuyor; metin her zaman okunabilir gövde renginde
+   kalıyor (durum renkleri koyu zeminde metin için değil işaret için
+   seçildi — bkz. docs/0.2-design-system.md §3). */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u-space-2);
+  padding: var(--u-space-1) var(--u-space-3);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-full);
+  font-size: var(--u-fs-xs);
+  white-space: nowrap;
+  color: var(--u-text);
+}
+
+.up {
+  background-color: var(--u-up-surface);
+}
+.up svg {
+  color: var(--u-up);
+}
+
+.degraded {
+  background-color: var(--u-degraded-surface);
+}
+.degraded svg {
+  color: var(--u-degraded);
+}
+
+.down {
+  background-color: var(--u-down-surface);
+}
+.down svg {
+  color: var(--u-down);
+}
+
+.paused {
+  background-color: var(--u-maintenance-surface);
+}
+.paused svg {
+  color: var(--u-maintenance);
+}
+
+.pending {
+  background-color: var(--u-nodata-surface);
+}
+.pending svg {
+  color: var(--u-nodata);
+}
+
+/* BAYAT (8.6): ölçümü durmuş monitor. 0.2'nin "veri yok" dili — `pending` ile
+   AYNI renk ve şekil, çünkü ikisi de "bilmiyoruz" demek. Ayrım metinde. */
+.stale {
+  background-color: var(--u-nodata-surface);
+}
+.stale svg {
+  color: var(--u-nodata);
+}

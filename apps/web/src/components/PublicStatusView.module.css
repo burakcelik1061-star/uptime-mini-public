@@ -1,0 +1,244 @@
+/* Public status sayfasının görünümü (5.1, 5.3'te ortaklaştırıldı).
+   Panodan görsel olarak da ayrılıyor: üst çubuk/gezinme yok, tek kolon, dar
+   içerik — ziyaretçinin tek sorusu var ve sayfanın tamamı onu cevaplıyor.
+
+   TEMA RENGİ: `--u-brand` org'un seçtiği renk, `--u-brand-on` onun üzerine
+   yazılacak metnin token'ı. İkisi de bu dosyanın DIŞINDA tanımlanmıyor ve
+   sayfa rengi seçmemişse varsayılanları devreye giriyor — yani rengin
+   kullanıldığı yerlerin listesi tam olarak aşağıdaki `var(--u-brand…)`
+   geçişleridir. */
+.page {
+  --u-brand: var(--u-accent);
+  --u-brand-on: var(--u-text-on-accent);
+
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 0 var(--u-space-4) var(--u-space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-6);
+}
+
+/* Marka çizgisi — yalnızca dekorasyon: hiçbir bilgi taşımadığı için okunmaz
+   bir renk seçimi burada yalnızca görünmez bir çizgi üretir. */
+.brandBar {
+  height: 4px;
+  margin: 0 calc(-1 * var(--u-space-4));
+  background-color: var(--u-brand);
+}
+
+.header {
+  text-align: center;
+  padding-top: var(--u-space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--u-space-2);
+}
+
+.logo {
+  max-height: 3rem;
+  max-width: 12rem;
+  object-fit: contain;
+}
+
+/* Logo yoksa: marka renginde bir kare ve içinde baş harf. Sayfada tema
+   renginin ÜZERİNE metin yazılan TEK yer — bu yüzden metin rengi sunucunun
+   hesapladığı tona bağlı (bkz. PublicStatusView.tsx). */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--u-radius-md);
+  background-color: var(--u-brand);
+  color: var(--u-brand-on);
+  font-size: var(--u-fs-xl);
+  font-weight: var(--u-fw-semibold);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--u-fs-3xl);
+  font-weight: var(--u-fw-semibold);
+  line-height: var(--u-lh-tight);
+  color: var(--u-text);
+}
+
+.subtitle,
+.description {
+  margin: 0;
+  font-size: var(--u-fs-md);
+  line-height: var(--u-lh-normal);
+  color: var(--u-text-muted);
+  max-width: 40rem;
+}
+
+/* --- Gruplar (5.3) -------------------------------------------------------- */
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+}
+
+.group + .group {
+  margin-top: var(--u-space-4);
+}
+
+.groupName {
+  margin: 0;
+  padding-left: var(--u-space-3);
+  /* Grup başlığının kenarı marka renginde: yine yalnızca kimlik, bilgi değil. */
+  border-left: 3px solid var(--u-brand);
+  font-size: var(--u-fs-md);
+  font-weight: var(--u-fw-medium);
+  color: var(--u-text);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--u-fs-lg);
+  font-weight: var(--u-fw-semibold);
+  color: var(--u-text);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--u-space-4);
+  border: 1px dashed var(--u-border);
+  border-radius: var(--u-radius-md);
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+/* --- Servisler ------------------------------------------------------------ */
+
+.services {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-md);
+  overflow: hidden;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3);
+  padding: var(--u-space-4);
+  background-color: var(--u-surface-1);
+}
+
+.serviceHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-3);
+}
+
+.service + .service {
+  border-top: 1px solid var(--u-border);
+}
+
+.serviceName {
+  font-size: var(--u-fs-md);
+  color: var(--u-text);
+}
+
+.serviceState {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-2);
+}
+
+.maintenanceTag {
+  padding: var(--u-space-1) var(--u-space-2);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-full);
+  background-color: var(--u-maintenance-surface);
+  font-size: var(--u-fs-2xs);
+  color: var(--u-text);
+}
+
+/* --- Kesintiler ve bakım -------------------------------------------------- */
+
+.incidents,
+.maintenance {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3);
+}
+
+.incident,
+.maintenanceItem {
+  padding: var(--u-space-4);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-md);
+  background-color: var(--u-surface-1);
+}
+
+.maintenanceItem {
+  border-left: 3px solid var(--u-maintenance);
+}
+
+.incidentHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--u-space-2);
+}
+
+.incidentTitle,
+.maintenanceTitle {
+  margin: 0;
+  flex: 1 1 auto;
+  font-size: var(--u-fs-md);
+  font-weight: var(--u-fw-medium);
+  color: var(--u-text);
+}
+
+.meta {
+  margin: var(--u-space-2) 0 0;
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.body {
+  margin: var(--u-space-2) 0 0;
+  font-size: var(--u-fs-sm);
+  line-height: var(--u-lh-normal);
+  color: var(--u-text);
+}
+
+.footer {
+  padding-top: var(--u-space-4);
+  border-top: 1px solid var(--u-border);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-faint);
+  text-align: center;
+}
+
+/* Sayfa üstü bayatlık notu (8.6): genel durum bandı "çalışıyor" derken bile
+   "ölçemiyoruz" bilgisini başlık seviyesinde görünür kılıyor. Bilgi renkte
+   değil METİNDE; kenarlık kesikli — 8.2/8.5'in uyarılarıyla aynı dil. */
+.staleNotice {
+  padding: var(--u-space-3) var(--u-space-4);
+  border: 1px dashed var(--u-nodata);
+  border-radius: var(--u-radius-md);
+  background-color: var(--u-nodata-surface);
+  color: var(--u-text);
+  font-size: var(--u-fs-sm);
+  line-height: var(--u-lh-normal);
+}

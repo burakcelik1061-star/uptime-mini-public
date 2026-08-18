@@ -1,0 +1,68 @@
+/* Genel durum bandı (5.1).
+   Renk yalnızca İKONU boyuyor; metin gövde renginde kalıyor — durum renkleri
+   koyu zeminde metin için değil işaret için seçildi (0.2 §3). Zemin, durumun
+   yüzey token'ı. */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-4);
+  padding: var(--u-space-5);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  background-color: var(--u-surface-1);
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.label {
+  margin: 0;
+  font-size: var(--u-fs-xl);
+  font-weight: var(--u-fw-semibold);
+  line-height: var(--u-lh-tight);
+  color: var(--u-text);
+}
+
+.detail {
+  margin: var(--u-space-1) 0 0;
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.operational {
+  background-color: var(--u-up-surface);
+}
+.operational .icon {
+  color: var(--u-up);
+}
+
+.degraded {
+  background-color: var(--u-degraded-surface);
+}
+.degraded .icon {
+  color: var(--u-degraded);
+}
+
+.partial,
+.major {
+  background-color: var(--u-down-surface);
+}
+.partial .icon,
+.major .icon {
+  color: var(--u-down);
+}
+
+.maintenance {
+  background-color: var(--u-maintenance-surface);
+}
+.maintenance .icon {
+  color: var(--u-maintenance);
+}
+
+.unknown {
+  background-color: var(--u-nodata-surface);
+}
+.unknown .icon {
+  color: var(--u-nodata);
+}

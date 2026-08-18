@@ -1,0 +1,150 @@
+/* Plan & kota ekranı (8.5). Ham değer YOK: yalnızca var(--u-*). */
+
+.page {
+  width: 100%;
+  max-width: var(--u-content-max);
+  margin: 0 auto;
+  padding: var(--u-space-6) var(--u-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-5);
+}
+
+.title {
+  font-size: var(--u-fs-2xl);
+  letter-spacing: -0.01em;
+}
+
+.sectionTitle {
+  font-size: var(--u-fs-lg);
+  margin-bottom: var(--u-space-3);
+}
+
+/* "Ödeme mock" uyarısı — 6.3/8.2'nin ekranlarıyla aynı görsel dil: bilgi
+   renkte değil, KESİKLİ KENARLIK ve metinde. */
+.mockNotice {
+  padding: var(--u-space-3) var(--u-space-4);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+  line-height: var(--u-lh-normal);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+}
+
+.notice {
+  color: var(--u-up);
+  font-size: var(--u-fs-sm);
+}
+
+.empty {
+  background-color: var(--u-surface-1);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-5);
+  text-align: center;
+  color: var(--u-text-muted);
+}
+
+.usage {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-4);
+}
+
+.usageLine {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+  line-height: var(--u-lh-normal);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--u-space-4);
+}
+
+.card {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3);
+}
+
+/* Mevcut plan ayrıca KENARLIKLA ayrışıyor; bilgiyi taşıyan şey yine de
+   yanındaki "Mevcut plan" METNİ (0.2'nin şartı). */
+.currentCard {
+  border-color: var(--u-accent);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-2);
+  flex-wrap: wrap;
+}
+
+.planName {
+  font-size: var(--u-fs-lg);
+  font-weight: var(--u-fw-semibold);
+}
+
+.badge {
+  padding: 2px var(--u-space-2);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-sm);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.action {
+  background-color: var(--u-accent);
+  color: var(--u-text-on-accent);
+  border: 1px solid var(--u-accent);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  font-weight: var(--u-fw-semibold);
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.action:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.action:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+.code {
+  font-family: var(--u-font-mono);
+  font-size: var(--u-fs-xs);
+}

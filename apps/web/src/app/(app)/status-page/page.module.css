@@ -1,0 +1,353 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  width: 100%;
+  max-width: var(--u-content-max);
+  margin: 0 auto;
+  padding: var(--u-space-6) var(--u-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-5);
+}
+
+.title {
+  font-size: var(--u-fs-2xl);
+  letter-spacing: -0.01em;
+}
+
+.lead {
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+  line-height: var(--u-lh-normal);
+  max-width: 48rem;
+}
+
+/* Düzenleyici solda, canlı önizleme sağda. Dar ekranda alt alta: önizleme
+   ikinci sırada kalıyor, çünkü asıl iş formda. */
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--u-space-5);
+  align-items: start;
+}
+
+@media (min-width: 68rem) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-5);
+  min-width: 0;
+}
+
+.previewColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+  min-width: 0;
+  position: sticky;
+  top: var(--u-space-4);
+}
+
+/* Önizleme, public sayfanın GERÇEK bileşeni; burada yalnızca bir çerçeveye
+   alınıyor ve ölçeklendiriliyor. */
+.preview {
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  background-color: var(--u-bg);
+  padding: 0 var(--u-space-2) var(--u-space-3);
+  max-height: 42rem;
+  overflow-y: auto;
+}
+
+.card {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3);
+  align-items: flex-start;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-3);
+  flex-wrap: wrap;
+}
+
+.cardTitle {
+  font-size: var(--u-fs-lg);
+}
+
+/* Yayın durumu: renk + METİN (etiketin kendisi zaten yazıyor). */
+.state {
+  font-size: var(--u-fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: var(--u-radius-full);
+  border: 1px solid var(--u-border);
+  padding: var(--u-space-1) var(--u-space-3);
+  color: var(--u-text);
+}
+
+.live {
+  background-color: var(--u-up-surface);
+  border-color: var(--u-up);
+}
+
+.draft {
+  background-color: var(--u-nodata-surface);
+  color: var(--u-text-muted);
+}
+
+.address {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.address code {
+  font-family: var(--u-font-mono);
+  color: var(--u-text);
+}
+
+.link {
+  font-size: var(--u-fs-sm);
+  color: var(--u-accent);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+}
+
+.item {
+  border-top: 1px solid var(--u-border);
+  padding-top: var(--u-space-2);
+}
+
+.item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.choice {
+  display: flex;
+  align-items: baseline;
+  gap: var(--u-space-3);
+  cursor: pointer;
+  padding: var(--u-space-2);
+  border-radius: var(--u-radius-md);
+}
+
+.choice:hover {
+  background-color: var(--u-surface-2);
+}
+
+.choice:focus-within {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+.name {
+  font-size: var(--u-fs-md);
+  color: var(--u-text);
+}
+
+.url {
+  font-family: var(--u-font-mono);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-faint);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-3);
+  flex-wrap: wrap;
+}
+
+.primary {
+  background-color: var(--u-accent);
+  color: var(--u-text-on-accent);
+  border: none;
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+  font-weight: var(--u-fw-medium);
+  cursor: pointer;
+  transition: opacity var(--u-transition-fast);
+}
+
+.primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.saved {
+  background-color: var(--u-up-surface);
+  border: 1px solid var(--u-up);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+}
+
+/* --- Görünüm formu (5.3) --------------------------------------------------
+   Alan stilleri FormControls.module.css'e taşınmadı: oradaki sınıflar
+   MonitorForm/IncidentForm'un düzenine bağlı (grid satırları), buradaki form
+   dar bir kolonda tek sütun. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+  width: 100%;
+}
+
+.label {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  background-color: var(--u-surface-2);
+  color: var(--u-text);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+  font-family: inherit;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.select {
+  width: auto;
+  margin-left: var(--u-space-6);
+}
+
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible,
+.color:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+.colorRow {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-3);
+  flex-wrap: wrap;
+}
+
+.color {
+  width: 3rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  background-color: var(--u-surface-2);
+  cursor: pointer;
+}
+
+.colorValue {
+  font-family: var(--u-font-mono);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.hint {
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-faint);
+  line-height: var(--u-lh-normal);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--u-text);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-1) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+  cursor: pointer;
+}
+
+.ghost:hover:not(:disabled) {
+  background-color: var(--u-surface-2);
+}
+
+.ghost:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* --- Gruplar --------------------------------------------------------------- */
+
+.groupList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+  counter-reset: none;
+}
+
+.groupItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-3);
+  padding: var(--u-space-2);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-md);
+}
+
+.groupActions {
+  display: flex;
+  gap: var(--u-space-1);
+}
+
+.muted {
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+}
+
+.empty {
+  width: 100%;
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-5);
+  text-align: center;
+  color: var(--u-text-muted);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+}

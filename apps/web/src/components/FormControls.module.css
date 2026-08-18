@@ -1,0 +1,161 @@
+/*
+ * 4.4'ün iki formunun (manuel incident, bakım penceresi) ORTAK stilleri.
+ *
+ * Neden ayrı bir modül: MonitorForm'un CSS'ini kopyalamak, altı ay sonra
+ * ayrışan üçüncü bir form dili demekti. CSS Modules aynı dosyanın birden
+ * fazla bileşen tarafından import edilmesine izin veriyor; sınıf adları yine
+ * dosya bazında kapsamlı kalıyor.
+ *
+ * MonitorForm KENDİ modülünde bırakıldı: 2.1/2.4'te yazılmış ve çalışan bir
+ * ekranı yalnızca ortaklaştırmak için değiştirmek, bu adımın kapsamı değil.
+ */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-4);
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-5);
+}
+
+.title {
+  font-size: var(--u-fs-xs);
+  font-weight: var(--u-fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--u-text-muted);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u-space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+  min-width: 12rem;
+}
+
+.grow {
+  flex: 1 1 20rem;
+}
+
+.label {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.input {
+  background-color: var(--u-surface-2);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-3);
+  color: var(--u-text);
+  width: 100%;
+  font-family: inherit;
+  font-size: var(--u-fs-md);
+}
+
+.textarea {
+  min-height: 5rem;
+  resize: vertical;
+  line-height: var(--u-lh-normal);
+}
+
+.input:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+/* Hatalı alan yalnızca renkle değil, altındaki METİNLE de işaretleniyor. */
+.input[aria-invalid='true'] {
+  border-color: var(--u-down);
+}
+
+.fieldError {
+  font-size: var(--u-fs-xs);
+  color: var(--u-down);
+}
+
+.hint {
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-faint);
+}
+
+/* Servis seçimi: çoklu seçim `<select multiple>` yerine ONAY KUTULARI —
+   seçili olanın ne olduğu tek bakışta görünüyor ve klavye/dokunmatikte
+   kazayla seçim kaybı olmuyor. */
+.services {
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+}
+
+.servicesLegend {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+  padding: 0 var(--u-space-2);
+}
+
+.serviceOption {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-2);
+  font-size: var(--u-fs-sm);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--u-space-3);
+}
+
+.submit {
+  background-color: var(--u-accent);
+  color: var(--u-text-on-accent);
+  border: 1px solid var(--u-accent);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  font-weight: var(--u-fw-semibold);
+  cursor: pointer;
+  transition: opacity var(--u-transition-fast);
+}
+
+.submit:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.secondary {
+  background-color: transparent;
+  color: var(--u-text);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  cursor: pointer;
+  transition: background-color var(--u-transition-fast);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--u-surface-2);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+}

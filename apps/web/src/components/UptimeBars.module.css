@@ -1,0 +1,143 @@
+/* 90 günlük uptime şeridi (5.2).
+
+   Barlar esneyerek şeridi dolduruyor: 90 sabit genişlikli kutu dar ekranda
+   yatay taşma yapardı. `min-width` okunabilirliğin alt sınırı — altına
+   inildiğinde şerit kendi içinde kayıyor. */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+}
+
+.strip {
+  display: flex;
+  gap: 2px;
+  align-items: stretch;
+  height: 34px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Tooltip şeridin dışına taşabilsin diye alt boşluk bırakılmıyor; tooltip
+     `position: fixed` değil `absolute` ve şerit kaydırılabilir olduğu için
+     üstte konumlanıyor. */
+  padding-bottom: 2px;
+}
+
+.day {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 4px;
+  border-radius: var(--u-radius-sm);
+  /* Zemin her durumda var: desenli günlerde desen bunun ÜSTÜNE geliyor. */
+  background-color: var(--u-nodata-surface);
+}
+
+/* --- Durumlar -------------------------------------------------------------
+   Renk tek sinyal değil: "veri yok" ve "bakım" ayrıca DESENLİ (0.2'nin
+   `--u-pattern-*` token'ları tam bunun için duruyordu). */
+
+.up {
+  background-color: var(--u-up);
+}
+
+.partial {
+  background-color: var(--u-degraded);
+}
+
+.down {
+  background-color: var(--u-down);
+}
+
+.maintenance {
+  background-color: var(--u-maintenance-surface);
+  background-image: var(--u-pattern-maintenance);
+}
+
+.noData {
+  background-color: var(--u-nodata-surface);
+  background-image: var(--u-pattern-nodata);
+}
+
+/* --- Tooltip --------------------------------------------------------------
+   Yalnızca CSS: sayfa sunucuda render ediliyor ve bu bilgi için istemciye
+   JavaScript göndermeye gerek yok (5.1'in kararı — ziyaretçi hiçbir şey
+   yazmıyor, sayfa da script'siz tam çalışıyor). */
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + var(--u-space-2));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  min-width: 12rem;
+  max-width: 20rem;
+  padding: var(--u-space-3);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  background-color: var(--u-surface-2);
+  box-shadow: var(--u-shadow-overlay);
+  font-size: var(--u-fs-xs);
+  line-height: var(--u-lh-normal);
+  color: var(--u-text);
+  text-align: left;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.day:hover .tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+}
+
+/* İlk ve son barın tooltip'i şeridin dışına taşmasın. */
+.day:first-child .tooltip {
+  left: 0;
+  transform: none;
+}
+
+.day:last-child .tooltip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.tooltipDay {
+  font-weight: var(--u-fw-semibold);
+}
+
+.tooltipValue {
+  color: var(--u-text-muted);
+  font-family: var(--u-font-mono);
+}
+
+.tooltipIncidents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+  margin-top: var(--u-space-1);
+  padding-top: var(--u-space-2);
+  border-top: 1px solid var(--u-border);
+}
+
+.tooltipIncident {
+  overflow-wrap: anywhere;
+}
+
+/* --- Alt şerit ------------------------------------------------------------ */
+
+.legend {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--u-space-3);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-faint);
+}
+
+.summary {
+  color: var(--u-text-muted);
+}
+
+.axis {
+  white-space: nowrap;
+}

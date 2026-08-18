@@ -1,0 +1,179 @@
+/* Ekip ekranı (8.3).
+   Ham değer YOK: renk/boşluk/yazı boyutu yalnızca var(--u-*) token'larından. */
+
+.page {
+  width: 100%;
+  max-width: var(--u-content-max);
+  margin: 0 auto;
+  padding: var(--u-space-6) var(--u-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-5);
+}
+
+.title {
+  font-size: var(--u-fs-2xl);
+  letter-spacing: -0.01em;
+}
+
+.sectionTitle {
+  font-size: var(--u-fs-lg);
+  margin-bottom: var(--u-space-3);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+}
+
+.notice {
+  color: var(--u-up);
+  font-size: var(--u-fs-sm);
+}
+
+.empty {
+  background-color: var(--u-surface-1);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-5);
+  text-align: center;
+  color: var(--u-text-muted);
+}
+
+.inviteForm {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-4);
+}
+
+.inviteRow {
+  display: flex;
+  gap: var(--u-space-3);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+  flex: 1 1 14rem;
+}
+
+.label {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.input {
+  background-color: var(--u-surface-2);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-3);
+  color: var(--u-text);
+}
+
+.input:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+.fieldError {
+  font-size: var(--u-fs-xs);
+  color: var(--u-down);
+}
+
+.submit {
+  background-color: var(--u-accent);
+  color: var(--u-text-on-accent);
+  border: 1px solid var(--u-accent);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  font-weight: var(--u-fw-semibold);
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.submit:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+}
+
+.row {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-4);
+  flex-wrap: wrap;
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+  flex: 1 1 16rem;
+}
+
+.name {
+  font-weight: var(--u-fw-semibold);
+}
+
+.address {
+  font-family: var(--u-font-mono);
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+/* Rol renk taşımıyor, METİN taşıyor (0.2'nin şartı). */
+.role {
+  padding: 2px var(--u-space-2);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-sm);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.meta {
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-faint);
+}
+
+.revoke {
+  background-color: transparent;
+  color: var(--u-text);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-1) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+  cursor: pointer;
+}
+
+.revoke:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.revoke:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}

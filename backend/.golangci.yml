@@ -1,0 +1,41 @@
+# golangci-lint yapılandırması (v2 şeması).
+#
+# Amaç: `go vet`in yakalamadığı ama gerçek hataya dönüşen şeyleri yakalamak —
+# özellikle YOKSAYILAN HATALAR (errcheck). Go'da hata değeri döndürmek
+# sözleşmenin parçası; `_ =` ile bilinçli olarak yok saymak serbest ama
+# sessizce atlamak değil.
+version: '2'
+
+linters:
+  default: standard
+  enable:
+    # Yoksayılan hata dönüşleri — bu projede en kritik linter: bir kontrol
+    # sonucunu yazamadığımızı fark etmemek, veriyi sessizce kaybetmek demek.
+    - errcheck
+    # Kullanılmayan kod (fazlar arası biriken ölü kod).
+    - unused
+    # Şüpheli yapılar; staticcheck'in "S" ailesi.
+    - staticcheck
+    # Bağlam taşıma hataları: context.Context'in ilk parametre olması,
+    # iptal edilebilirliğin kaybolmaması.
+    - noctx
+    # SQL satırlarının/kaynakların kapatılmaması (Faz 1+ için şimdiden açık).
+    - rowserrcheck
+    - sqlclosecheck
+
+  settings:
+    errcheck:
+      # Bilinçli yok sayma (`_ = f()`) serbest kalsın; niyeti kod okunurken
+      # görünür oluyor. Zorunlu kılmak gereksiz gürültü üretirdi.
+      check-blank: false
+
+  exclusions:
+    rules:
+      # Testlerde kurulum hatalarını yok saymak yaygın ve zararsız.
+      - path: _test\.go
+        linters:
+          - errcheck
+
+formatters:
+  enable:
+    - gofmt

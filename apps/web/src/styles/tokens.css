@@ -1,0 +1,129 @@
+/**
+ * Tasarım token'ları — uptime-mini
+ *
+ * Bu dosya, arayüzün TEK renk/ölçü kaynağıdır. Komponentler ham değer
+ * (#hex, 13px, 6px) yazmaz; sadece buradaki değişkenleri kullanır.
+ * Gerekçe ve kontrast ölçümleri: `docs/0.2-design-system.md`.
+ *
+ * TEK TEMA: koyu. Açık tema YOK (yarım bırakılmış bir ikili tema yerine
+ * bilinçli tek tema) — bir ops konsolu uzun süre açık kalır ve referans
+ * ürünlerin (Grafana, BetterStack) varsayılanı da budur.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* --- Yüzey katmanları (arkadan öne) --------------------------------- */
+  --u-bg: #0b0f16;
+  --u-surface-1: #121722;
+  --u-surface-2: #1a2130;
+  --u-surface-3: #232c3d;
+
+  /* Ayırıcı çizgiler (dekoratif) ve etkileşimli kontrol kenarlıkları.
+     İkisi ayrı token: WCAG 1.4.11 etkileşimli bileşenlerden 3:1 ister,
+     dekoratif ayırıcılardan istemez. */
+  --u-border: #2a3446;
+  --u-border-strong: #5f6e8c;
+
+  /* --- Metin ---------------------------------------------------------- */
+  --u-text: #e8edf7;
+  --u-text-muted: #a8b4c8;
+  /* SADECE dekoratif/pasif metin için — gövde metni olarak kullanılmaz. */
+  --u-text-faint: #7c8aa0;
+  --u-text-on-accent: #08111f;
+
+  /* --- Vurgu ---------------------------------------------------------- */
+  --u-accent: #5b9dff;
+  --u-accent-surface: #17233a;
+
+  /* --- Durum renkleri --------------------------------------------------
+     UYARI: durum ASLA sadece renkle anlatılmaz. Her durumun bir ikonu/
+     şekli ve metin etiketi vardır (bkz. --u-pattern-* ve tasarım dokümanı
+     §4) — renk körlüğü olan bir kullanıcı da ayırt edebilmeli. */
+  --u-up: #35d399;
+  --u-degraded: #f2b544;
+  --u-down: #ff6b6b;
+  --u-maintenance: #8b9bff;
+  --u-nodata: #5a6678;
+
+  /* Durum renklerinin yüzey (dolgu) karşılıkları — rozet/arka plan için */
+  --u-up-surface: #0f2a22;
+  --u-degraded-surface: #2c2213;
+  --u-down-surface: #2e1719;
+  --u-maintenance-surface: #1b1f38;
+  --u-nodata-surface: #171c26;
+
+  /* --- Desenler (renk körlüğü için ikinci sinyal) ---------------------
+     90 günlük uptime barlarında bakım ve "veri yok" günleri düz renkle
+     değil, desenle de ayrışır. */
+  --u-pattern-maintenance: repeating-linear-gradient(
+    135deg,
+    var(--u-maintenance) 0 2px,
+    transparent 2px 5px
+  );
+  --u-pattern-nodata: repeating-linear-gradient(
+    45deg,
+    var(--u-nodata) 0 1px,
+    transparent 1px 4px
+  );
+
+  /* --- Tipografi ------------------------------------------------------
+     Sayısal veri (yanıt süresi, uptime %, zaman damgası) mono ile yazılır:
+     rakamlar sabit genişlikte olunca tablo kolonları zıplamaz. */
+  --u-font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --u-font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Mono', 'JetBrains Mono', Consolas,
+    'Liberation Mono', monospace;
+
+  --u-fs-2xs: 0.6875rem; /* 11px — sadece rozet/etiket */
+  --u-fs-xs: 0.75rem; /* 12px */
+  --u-fs-sm: 0.8125rem; /* 13px — tablo gövdesi */
+  --u-fs-md: 0.875rem; /* 14px — varsayılan gövde */
+  --u-fs-lg: 1rem; /* 16px */
+  --u-fs-xl: 1.25rem; /* 20px */
+  --u-fs-2xl: 1.5rem; /* 24px */
+  --u-fs-3xl: 2rem; /* 32px */
+
+  --u-lh-tight: 1.25;
+  --u-lh-normal: 1.5;
+
+  --u-fw-regular: 400;
+  --u-fw-medium: 500;
+  --u-fw-semibold: 600;
+
+  /* --- Aralık ölçeği (4px tabanlı) ------------------------------------ */
+  --u-space-1: 0.25rem; /* 4 */
+  --u-space-2: 0.5rem; /* 8 */
+  --u-space-3: 0.75rem; /* 12 */
+  --u-space-4: 1rem; /* 16 */
+  --u-space-5: 1.5rem; /* 24 */
+  --u-space-6: 2rem; /* 32 */
+  --u-space-7: 3rem; /* 48 */
+  --u-space-8: 4rem; /* 64 */
+
+  /* --- Köşe, gölge, odak, hareket -------------------------------------- */
+  --u-radius-sm: 3px;
+  --u-radius-md: 6px;
+  --u-radius-lg: 10px;
+  --u-radius-full: 999px;
+
+  --u-shadow-overlay: 0 12px 32px rgb(0 0 0 / 55%);
+
+  --u-focus-ring: 2px solid var(--u-accent);
+  --u-focus-offset: 2px;
+
+  --u-transition-fast: 120ms ease;
+
+  /* --- Yerleşim -------------------------------------------------------- */
+  --u-content-max: 72rem;
+  --u-sidebar-width: 15rem;
+}
+
+/* Hareket hassasiyeti olan kullanıcılar için geçişleri kapat. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --u-transition-fast: 0ms;
+  }
+}

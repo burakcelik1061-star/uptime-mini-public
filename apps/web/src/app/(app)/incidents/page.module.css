@@ -1,0 +1,86 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  width: 100%;
+  max-width: var(--u-content-max);
+  margin: 0 auto;
+  padding: var(--u-space-6) var(--u-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-5);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-4);
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: var(--u-fs-2xl);
+  letter-spacing: -0.01em;
+}
+
+.action {
+  background-color: transparent;
+  color: var(--u-text);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+  cursor: pointer;
+  transition: background-color var(--u-transition-fast);
+}
+
+.action:hover {
+  background-color: var(--u-surface-2);
+}
+
+.filters {
+  display: flex;
+  gap: var(--u-space-2);
+  flex-wrap: wrap;
+}
+
+/* Seçili süzgeç renkle DEĞİL, kenarlık + dolgu + `aria-pressed` ile de
+   ayrışıyor (0.2'nin şartı). */
+.filter {
+  background-color: transparent;
+  color: var(--u-text-muted);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-full);
+  padding: var(--u-space-1) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+  cursor: pointer;
+  transition: background-color var(--u-transition-fast);
+}
+
+.filter:hover {
+  background-color: var(--u-surface-2);
+}
+
+.filterActive {
+  background-color: var(--u-accent-surface);
+  border-color: var(--u-border-strong);
+  color: var(--u-text);
+  font-weight: var(--u-fw-medium);
+}
+
+.muted {
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+}

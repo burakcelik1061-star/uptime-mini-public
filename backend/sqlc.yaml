@@ -1,0 +1,71 @@
+# sqlc: yazdığımız SQL'den TİPLİ Go kodu üretir (ORM yok — bkz.
+# docs/0.2-tech-stack.md). Şemanın doğruluk kaynağı goose migration'ları;
+# sqlc onları okuyup sorguları şemaya karşı doğruluyor.
+#
+# Çalıştırma:  pnpm db:generate
+#
+# sqlc YEREL OLARAK KURULU DEĞİL, resmi imajla çalışıyor (sürüm sabit).
+# Gerekçe: sqlc'nin Postgres ayrıştırıcısı cgo istiyor, bu makinede gcc yok
+# (0.4'te `go test -race` de bu yüzden Linux konteynerinde koşulmuştu).
+# Üretilen kod repoya COMMIT EDİLİYOR: CI ve klonlayan herkes sqlc olmadan
+# derleyebilsin.
+version: '2'
+
+sql:
+  - engine: postgresql
+    schema: 'db/migrations'
+    queries: 'db/queries'
+    gen:
+      go:
+        package: 'store'
+        # Bu dizinin TAMAMI üretilmiştir, elle düzenlenmez.
+        out: 'internal/store'
+        # pgx havuzu doğrudan kullanılıyor; database/sql katmanı yok
+        # (database/sql yalnızca goose'un gerektirdiği yerde).
+        sql_package: 'pgx/v5'
+        # JSON etiketi yok: dışa verilen sözleşme handler'larda ayrıca
+        # tanımlanıyor. Aksi hâlde şemaya eklenen bir sütun (ör. password_hash)
+        # kazara API cevabına sızabilirdi.
+        emit_json_tags: false
+        emit_empty_slices: true
+        overrides:
+          # pgtype.UUID yerine yaygın uuid.UUID: kimliğin context'te,
+          # handler'da ve testte tek bir tipi olsun.
+          - db_type: 'uuid'
+            go_type: 'github.com/google/uuid.UUID'
+          # NULL olabilen uuid (4.1'in incidents.auto_monitor_id'si: manuel
+          # incident'ta özne yok) yine işaretçi — pgtype.UUID'in `Valid`
+          # alanını taşımak, "monitor yok" kontrolünü her çağrı yerinde ikinci
+          # bir biçimde yazmak demekti.
+          - db_type: 'uuid'
+            nullable: true
+            go_type:
+              import: 'github.com/google/uuid'
+              type: 'UUID'
+              pointer: true
+          - db_type: 'timestamptz'
+            go_type: 'time.Time'
+          # NULL olabilen zaman sütunları (used_at, revoked_at) işaretçi
+          # olsun: "değer yok" ile "sıfır zaman" birbirine karışmasın.
+          - db_type: 'timestamptz'
+            nullable: true
+            go_type:
+              type: 'time.Time'
+              pointer: true
+          # Aynı gerekçe NULL olabilen sayısal sütunlar için (2.2'nin
+          # degraded_response_ms'i): pgtype.Int4 yerine *int32 — "eşik yok"
+          # ile "eşik 0" karışmasın ve tip alan sözlüğünün geri kalanıyla
+          # aynı dilde kalsın.
+          - db_type: 'pg_catalog.int4'
+            nullable: true
+            go_type:
+              type: 'int32'
+              pointer: true
+          # NULL olabilen metin (check_results.error_message) da işaretçi:
+          # pgtype.Text yerine *string — "hata mesajı yok" ile "boş mesaj"
+          # ayrı kalsın.
+          - db_type: 'text'
+            nullable: true
+            go_type:
+              type: 'string'
+              pointer: true

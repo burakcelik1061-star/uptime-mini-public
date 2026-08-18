@@ -1,0 +1,35 @@
+{
+  "name": "uptime-mini",
+  "private": true,
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "e2e": "pnpm --filter e2e test",
+    "e2e:report": "pnpm --filter e2e report",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "dev:api": "cd backend && go run ./cmd/api",
+    "dev:worker": "cd backend && go run ./cmd/worker",
+    "go:build": "cd backend && go build ./...",
+    "go:test": "cd backend && go test ./...",
+    "go:lint": "cd backend && go vet ./... && gofmt -l .",
+    "db:generate": "docker run --rm -v ./backend:/src -w /src sqlc/sqlc:1.31.1 generate",
+    "db:migrate": "cd backend && go run ./cmd/migrate up",
+    "db:seed": "cd backend && go run ./cmd/seed",
+    "db:seed:reset": "cd backend && go run ./cmd/seed -reset",
+    "db:status": "cd backend && go run ./cmd/migrate status",
+    "db:down": "cd backend && go run ./cmd/migrate down"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "turbo": "2.10.9",
+    "typescript": "5.9.3"
+  }
+}

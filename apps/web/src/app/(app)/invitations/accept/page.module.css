@@ -1,0 +1,60 @@
+/* Davet kabul ekranı (8.3). Ham değer YOK: yalnızca var(--u-*). */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--u-space-5);
+}
+
+.card {
+  width: 100%;
+  max-width: 28rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-4);
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-6);
+  text-align: center;
+}
+
+.title {
+  font-size: var(--u-fs-xl);
+}
+
+.body {
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+  line-height: var(--u-lh-normal);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+}
+
+.action {
+  background-color: var(--u-accent);
+  color: var(--u-text-on-accent);
+  border: 1px solid var(--u-accent);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-2) var(--u-space-4);
+  font-weight: var(--u-fw-semibold);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.action:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.action:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+}

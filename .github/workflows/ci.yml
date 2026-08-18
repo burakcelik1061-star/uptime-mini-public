@@ -1,0 +1,251 @@
+name: CI
+
+# DEPLOY ADIMI YOK — bilinçli (bkz. docs/0.0-constraints.md §1).
+# Bu pipeline yalnızca kodun sağlığını ölçer.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Aynı dal için yeni bir push gelince eski koşuyu iptal et: runner dakikası
+# boşa gitmesin, sıra beklemesin.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # BEŞ JOB PARALEL KOŞAR: biri kırıldığında hangi katmanın bozulduğu job
+  # adından doğrudan görülür ve toplam süre en yavaş job kadar olur.
+  #
+  # 7.3'te bölümleme tamamlandı: Go tarafı BİRİM ve INTEGRATION olarak ikiye
+  # ayrıldı, E2E kendi job'ında. Ayrımın iki gerekçesi var ve ikincisi asıl
+  # olan:
+  #
+  #   1. HIZLI GERİ BİLDİRİM — lint ve birim testleri veritabanı beklemeden,
+  #      dakikalar değil saniyeler içinde cevap veriyor.
+  #   2. `-short` YOLUNU CANLI TUTMAK — 7.1'in birim/integration ayrımı
+  #      `testing.Short()` üzerine kurulu. Bu bayrak CI'da hiç koşmasaydı,
+  #      bir gün sessizce bozulur (ör. veritabanına dokunan yeni bir test
+  #      `testdb`i atlayarak yazılır) ve kimse fark etmezdi.
+  #
+  # BİRİM TESTLERİ İKİ KEZ KOŞUYOR (integration job'ı tüm paketleri koşuyor).
+  # Bilinçli: integration job'ının yalnızca veritabanına dokunan paketleri
+  # seçmesi, elle tutulan bir paket listesi demekti — ve o liste her yeni
+  # pakette güncellenmeyi unuturdu (1.4'ün ve 7.1'in aynı gerekçesi).
+  # ---------------------------------------------------------------------------
+
+  backend-unit:
+    name: Backend — birim (Go)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          # Sürüm tek kaynaktan: backend/go.mod. Workflow'a ayrıca sürüm
+          # yazmak, iki yerin sessizce ayrışması demek olurdu.
+          go-version-file: backend/go.mod
+          cache-dependency-path: backend/go.sum
+
+      - name: Biçim kontrolü (gofmt)
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "Şu dosyalar gofmt'lenmemiş:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.12.2
+          working-directory: backend
+
+      - name: Birim testleri
+        # -short: veritabanına dokunan her test atlanıyor (7.1). DATABASE_URL
+        # bilinçli olarak TANIMSIZ — bu job'ın postgres servisi yok ve testler
+        # gerçekten atlanabiliyor mu, burada ölçülüyor.
+        #
+        # -race: veri yarışlarını yakalar. Scheduler'ın eşzamanlılık testleri
+        # (3.2) sahte store'larla koşuyor, yani BU job'ın kapsamında.
+        run: go test -short -race ./...
+
+  backend-integration:
+    name: Backend — integration (Go + Postgres)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+    # Postgres servisi Faz 1.2'de EKLENDİ: refresh token rotasyonu ve yeniden
+    # kullanım tespiti (internal/sessions) gerçek bir veritabanına karşı test
+    # ediliyor — satır kilidi ve transaction semantiği sahte bir store ile
+    # ölçülemez. 0.4'te "gerçek ihtiyaç doğduğunda eklenecek" denmişti;
+    # ihtiyaç o adımda doğdu ve 7.1'de bütün kritik iş mantığına yayıldı.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: uptime
+          POSTGRES_PASSWORD: uptime_ci_password
+          POSTGRES_DB: uptime_mini
+        ports:
+          - 5432:5432
+        # Testler "port açıldı" anında değil, veritabanı gerçekten sorgu
+        # kabul ettiğinde başlasın.
+        options: >-
+          --health-cmd "pg_isready -U uptime -d uptime_mini"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: backend/go.mod
+          cache-dependency-path: backend/go.sum
+
+      - name: Testler (birim + integration)
+        run: go test -race ./...
+        env:
+          # CI'DA ATLAMA YOK: 7.1'den beri `CI` tanımlıyken DATABASE_URL
+          # yokluğu testleri atlatmıyor, HATA veriyor. Yani bu satırın
+          # yanlışlıkla silinmesi sessiz bir yeşile değil, kırmızıya düşüyor.
+          # Her test paketi kendi veritabanını (`uptime_mini_test_<paket>`)
+          # oluşturup migration'ları uyguluyor.
+          DATABASE_URL: postgres://uptime:uptime_ci_password@localhost:5432/uptime_mini?sslmode=disable
+
+  frontend:
+    name: Frontend (Next.js)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      # pnpm SÜRÜMÜ BURAYA YAZILMIYOR: tek kaynak package.json'daki
+      # `packageManager` alanı. canny-mini'de her iki yerde de tanımlıydı ve
+      # "Multiple versions of pnpm specified" hatasıyla CI aylarca hiç
+      # çalışmadı — pipeline "Setup pnpm" adımında ölüyordu.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+
+      # typecheck artık web VE e2e paketlerini kapsıyor (turbo her ikisinde de
+      # `typecheck` script'i buluyor) — E2E kodu tip denetimsiz kalmasın.
+      - run: pnpm typecheck
+
+      # Biçim denetimi 7.3'te EKLENDİ: `pnpm format:check` yerelde bitiş
+      # şartıydı ama CI'da hiç koşmuyordu, yani biçimsiz bir commit yeşil
+      # geçip bir sonraki geliştiricinin turunu kırardı.
+      - run: pnpm format:check
+
+      - run: pnpm build
+        env:
+          # Turbo 2.x "strict" env modunda: turbo.json'da sayılmayan hiçbir
+          # değişken task'ın alt sürecine geçmez. Buraya eklenen her
+          # değişken turbo.json'daki `env` listesinde de olmalı.
+          NEXT_PUBLIC_API_URL: http://localhost:3400
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+
+      # E2E yığını api ve worker'ı YEREL SÜREÇ olarak kaldırıyor (7.2), yani
+      # bu job'ın hem Go hem Node toolchain'ine ihtiyacı var. Postgres
+      # servisi tanımlanmıyor: harness compose'daki postgres'i kendisi
+      # kaldırıyor ve böylece CI ile yerel koşu AYNI kod yolundan geçiyor.
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: backend/go.mod
+          cache-dependency-path: backend/go.sum
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Playwright tarayıcısı
+        # Yalnızca chromium: üç tarayıcıyı da indirmek turun süresini
+        # katlıyor ve E2E'nin konusu tarayıcı uyumluluğu değil, uygulamanın
+        # akışı.
+        run: pnpm --filter e2e exec playwright install --with-deps chromium
+
+      - name: E2E
+        run: pnpm e2e
+
+      # Rapor YALNIZCA BAŞARISIZLIKTA yükleniyor: yeşil bir turun raporunu
+      # kimse açmıyor ve her koşuda artifact yüklemek depolama kotasını
+      # boşuna harcıyor. İz (trace), ekran görüntüsü ve video zaten
+      # `retain-on-failure` ile üretiliyor (bkz. e2e/playwright.config.ts).
+      - name: Playwright raporunu yükle
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            e2e/playwright-report/
+            e2e/test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  docker:
+    name: Docker imajları
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      # "Klonlayan herkes `docker compose up` ile çalıştırabilmeli" bu
+      # projenin sözü (docs/0.0-constraints.md §3). Dockerfile'ın
+      # bozulduğunu ancak birisi denediğinde öğrenmek yerine burada
+      # yakalıyoruz. Üç imaj aynı Dockerfile'dan üretiliyor; katmanlar
+      # paylaşıldığı için ilkinden sonrakiler hızlı.
+      #
+      # E2E api/worker'ı yerel süreç olarak koşturuyor (7.2), yani imajların
+      # gerçekten build olduğunu ölçen tek yer BURASI.
+      - name: api imajı
+        run: docker build --build-arg BINARY=api -t uptime-mini-api ./backend
+
+      - name: worker imajı
+        run: docker build --build-arg BINARY=worker -t uptime-mini-worker ./backend
+
+      - name: migrate imajı
+        run: docker build --build-arg BINARY=migrate -t uptime-mini-migrate ./backend
+
+      # Seed imajı da burada (7.5): demo verisi Go kurulumu olmadan
+      # `docker compose --profile seed run --rm seed` ile yükleniyor ve
+      # klonlayan biri için ilk izlenim o. Bozulduğunu, demoyu çalıştıran
+      # kişiden önce burada öğreniyoruz.
+      - name: seed imajı
+        run: docker build --build-arg BINARY=seed -t uptime-mini-seed ./backend
+
+      - name: compose dosyası geçerli mi
+        run: docker compose config --quiet

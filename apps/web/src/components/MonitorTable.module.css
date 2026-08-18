@@ -1,0 +1,60 @@
+.wrapper {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  /* Dar ekranda tablo SAYFAYI değil kendini kaydırsın. */
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--u-fs-sm);
+}
+
+.caption {
+  text-align: left;
+  padding: var(--u-space-4) var(--u-space-4) 0;
+  font-size: var(--u-fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--u-text-muted);
+}
+
+.table th {
+  text-align: left;
+  font-weight: var(--u-fw-medium);
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-xs);
+  padding: var(--u-space-3) var(--u-space-4);
+  border-bottom: 1px solid var(--u-border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--u-space-3) var(--u-space-4);
+  border-bottom: 1px solid var(--u-border);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.name {
+  font-weight: var(--u-fw-medium);
+}
+
+.url {
+  max-width: 28rem;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  background-color: var(--u-surface-1);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-6);
+  text-align: center;
+  color: var(--u-text-muted);
+}

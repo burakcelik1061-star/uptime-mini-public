@@ -1,0 +1,74 @@
+/* Abonelik kutusu (6.4). */
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+  padding: var(--u-space-4);
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+}
+
+.heading {
+  font-size: var(--u-fs-lg);
+  font-weight: var(--u-fw-semibold);
+}
+
+.lead {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-1);
+}
+
+.label {
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.row {
+  display: flex;
+  gap: var(--u-space-2);
+  flex-wrap: wrap;
+}
+
+.input {
+  flex: 1 1 16rem;
+  padding: var(--u-space-2) var(--u-space-3);
+  background-color: var(--u-surface-2);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  color: var(--u-text);
+  font-size: var(--u-fs-sm);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--u-accent);
+  outline-offset: 2px;
+}
+
+.submit {
+  padding: var(--u-space-2) var(--u-space-4);
+  background-color: var(--u-accent);
+  border: 1px solid var(--u-accent);
+  border-radius: var(--u-radius-md);
+  color: var(--u-text-on-accent);
+  font-size: var(--u-fs-sm);
+  font-weight: var(--u-fw-medium);
+  cursor: pointer;
+}
+
+.submit:hover {
+  filter: brightness(1.08);
+}
+
+/* Sonuç metni: bilgi RENKTE değil, yazının kendisinde. */
+.result {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text);
+}

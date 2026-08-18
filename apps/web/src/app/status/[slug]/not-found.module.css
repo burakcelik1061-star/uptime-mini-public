@@ -1,0 +1,21 @@
+.page {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: var(--u-space-8) var(--u-space-4);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--u-fs-2xl);
+  font-weight: var(--u-fw-semibold);
+  line-height: var(--u-lh-tight);
+  color: var(--u-text);
+}
+
+.body {
+  margin: var(--u-space-4) 0 0;
+  font-size: var(--u-fs-md);
+  line-height: var(--u-lh-normal);
+  color: var(--u-text-muted);
+}

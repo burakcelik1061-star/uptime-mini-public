@@ -1,0 +1,94 @@
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3);
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-5);
+}
+
+.caption {
+  font-size: var(--u-fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--u-text-muted);
+}
+
+.chart {
+  width: 100%;
+  height: 8rem;
+  background-color: var(--u-surface-2);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-md);
+}
+
+/* Bar renkleri durum token'larından; ayırt edici ikinci sinyal barın
+   YÜKSEKLİĞİ ve başarısızlarda DESEN (bkz. bileşen açıklaması). */
+.bar-success {
+  fill: var(--u-up);
+}
+
+.bar-degraded {
+  fill: var(--u-degraded);
+}
+
+.failureBase {
+  fill: var(--u-down-surface);
+}
+
+.failureLine {
+  stroke: var(--u-down);
+  stroke-width: 2;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--u-space-4);
+  list-style: none;
+  padding: 0;
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-2);
+}
+
+.swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--u-radius-sm);
+  border: 1px solid var(--u-border);
+}
+
+/* SVG dışında `fill` çalışmıyor; rozetler arka planla boyanıyor. */
+.swatch.bar-success {
+  background-color: var(--u-up);
+}
+
+.swatch.bar-degraded {
+  background-color: var(--u-degraded);
+}
+
+.swatchFailure {
+  background-color: var(--u-down-surface);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--u-down) 0 1px,
+    transparent 1px 4px
+  );
+  border-color: var(--u-down);
+}
+
+.empty {
+  background-color: var(--u-surface-1);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-6);
+  text-align: center;
+  color: var(--u-text-muted);
+}

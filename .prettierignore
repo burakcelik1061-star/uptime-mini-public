@@ -1,0 +1,17 @@
+node_modules
+dist
+.next
+.turbo
+# Next'in ürettiği tip bildirimi (git'te de yok): biçimi bizim değil.
+next-env.d.ts
+coverage
+playwright-report
+test-results
+e2e/.bin
+pnpm-lock.yaml
+packages/db/migrations
+
+# Markdown dosyaları BİLİNÇLİ olarak kapsam dışı: prettier tabloları ve
+# listeleri yeniden akıtırken düz metni bozabiliyor (0.2'de bir dokümandaki
+# bir madde işareti gerçekten bozuldu). Dokümanlar elle biçimlendiriliyor.
+*.md

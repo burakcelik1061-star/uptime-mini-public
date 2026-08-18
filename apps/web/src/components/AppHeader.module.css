@@ -1,0 +1,105 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--u-space-4);
+  padding: var(--u-space-3) var(--u-space-5);
+  background-color: var(--u-surface-1);
+  border-bottom: 1px solid var(--u-border);
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: var(--u-space-3);
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-weight: var(--u-fw-semibold);
+}
+
+.org {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+/* Canlı bağlantı göstergesi (6.1). Renk yalnızca İKİNCİ sinyal: şekil ve
+   metin tek başlarına durumu anlatıyor. */
+.connection {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--u-space-1);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.live {
+  color: var(--u-up);
+}
+
+.offline {
+  color: var(--u-degraded);
+}
+
+.connecting,
+.idle {
+  color: var(--u-text-muted);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-1);
+}
+
+.link {
+  padding: var(--u-space-1) var(--u-space-3);
+  border-radius: var(--u-radius-md);
+  border: 1px solid transparent;
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+  text-decoration: none;
+  transition: background-color var(--u-transition-fast);
+}
+
+.link:hover {
+  background-color: var(--u-surface-2);
+  color: var(--u-text);
+}
+
+/* Aktif bölüm renkle DEĞİL, kenarlık + dolgu + kalınlıkla da ayrışıyor
+   (ve `aria-current` ile ekran okuyucuya). */
+.active {
+  background-color: var(--u-accent-surface);
+  border-color: var(--u-border-strong);
+  color: var(--u-text);
+  font-weight: var(--u-fw-medium);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-3);
+}
+
+.email {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text-muted);
+}
+
+.logout {
+  background-color: transparent;
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-1) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+  color: var(--u-text);
+  cursor: pointer;
+  transition: background-color var(--u-transition-fast);
+}
+
+.logout:hover {
+  background-color: var(--u-surface-2);
+}

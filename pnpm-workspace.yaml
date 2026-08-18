@@ -1,0 +1,12 @@
+packages:
+  - 'apps/*'
+  # E2E ayrı bir paket: uygulamanın parçası değil, uygulamayı DIŞARIDAN
+  # süren bir test yığını (7.2).
+  - 'e2e'
+
+# pnpm 11, postinstall script'i olan paketleri varsayılan olarak çalıştırmaz
+# (tedarik zinciri riski). Açılan tek paket eslint'in native modül
+# çözümleyicisi ve Next/eslint zincirindeki esbuild:
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true

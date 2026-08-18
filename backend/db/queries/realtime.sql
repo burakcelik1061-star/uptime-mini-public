@@ -1,0 +1,27 @@
+-- Canlı yayın taşıması (Faz 6.1).
+--
+-- worker ve api AYRI SÜREÇLER (3.1): olay worker'da doğuyor, WebSocket
+-- bağlantısı api'de yaşıyor. İkisini bağlayan yol Postgres'in LISTEN/NOTIFY
+-- mekanizması — projeye yeni bir altyapı servisi (Redis) eklenmedi.
+--
+-- NOTIFY'ın burada Redis pub/sub'a göre asıl üstünlüğü ZAMANLAMA: bildirim
+-- TRANSACTION COMMIT EDİLDİĞİNDE gönderiliyor. Yani api olayı gördüğünde onu
+-- doğuran satır (incident, monitor durumu) başka transaction'lara çoktan
+-- görünür durumda. Ayrı bir pub/sub'da "commit'ten hemen sonra yayımla"
+-- yazmak, olayı alan api'nin veritabanını okuyup henüz eski hâli görmesi
+-- ihtimalini açık bırakırdı.
+--
+-- Bu dosyadaki sorgu ORG-SCOPED DEĞİL (schedule.sql ile aynı gerekçe): çağıran
+-- bir kullanıcı adına iş yapmıyor. Kimin hangi olayı GÖRECEĞİ kararı taşımada
+-- değil, kanal adında ve abonelikte (internal/realtime → Hub).
+
+-- name: PublishRealtimeEvent :exec
+-- Olayı NOTIFY kanalına yayımlar.
+--
+-- `pg_notify` fonksiyon biçimi bilinçli: `NOTIFY` ifadesi kanal adını ve
+-- payload'ı LİTERAL istiyor, yani dize birleştirmek gerekirdi. Fonksiyon
+-- biçimi ikisini de parametre olarak alıyor.
+--
+-- Payload'ın 8000 baytlık üst sınırı Postgres'in kuralı; sınıra takılmamak
+-- çağıranın sözleşmesi (bkz. internal/realtime → maxNotifyPayload).
+SELECT pg_notify(@channel::text, @payload::text);

@@ -1,0 +1,161 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  width: 100%;
+  max-width: var(--u-content-max);
+  margin: 0 auto;
+  padding: var(--u-space-6) var(--u-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-5);
+}
+
+.title {
+  font-size: var(--u-fs-2xl);
+  letter-spacing: -0.01em;
+}
+
+.lead {
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+  line-height: var(--u-lh-normal);
+  max-width: 48rem;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-3);
+}
+
+.item {
+  background-color: var(--u-surface-1);
+  border: 1px solid var(--u-border);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--u-space-2);
+  align-items: flex-start;
+}
+
+.itemHead {
+  display: flex;
+  align-items: center;
+  gap: var(--u-space-3);
+  flex-wrap: wrap;
+}
+
+.itemTitle {
+  font-size: var(--u-fs-lg);
+}
+
+/* Faz rozetleri: renk + METİN (etiketin kendisi zaten yazıyor). */
+.remove {
+  background-color: transparent;
+  color: var(--u-text);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-1) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+  cursor: pointer;
+  transition: background-color var(--u-transition-fast);
+}
+
+.remove:hover:not(:disabled) {
+  background-color: var(--u-surface-2);
+}
+
+.remove:disabled {
+  opacity: 0.6;
+}
+
+.muted {
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+}
+
+.empty {
+  background-color: var(--u-surface-1);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-lg);
+  padding: var(--u-space-6);
+  text-align: center;
+  color: var(--u-text-muted);
+}
+
+.error {
+  background-color: var(--u-down-surface);
+  border: 1px solid var(--u-down);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-3) var(--u-space-4);
+  font-size: var(--u-fs-sm);
+}
+
+/* Bildirim kanalları ekranı (6.3). */
+
+/* "Bu bir mock" uyarısı: gönderim bugün yalnızca sunucu loguna yazılıyor.
+   Rengin yanında ayrıca KENARLIK ve metin var — bilgi renkte değil. */
+.mock {
+  padding: var(--u-space-3) var(--u-space-4);
+  border: 1px dashed var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  color: var(--u-text-muted);
+  font-size: var(--u-fs-sm);
+}
+
+.notice {
+  color: var(--u-up);
+  font-size: var(--u-fs-sm);
+}
+
+/* Kanal türü: renk taşımıyor, metin taşıyor. */
+.kind {
+  padding: 2px var(--u-space-2);
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-sm);
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.target {
+  font-size: var(--u-fs-sm);
+  color: var(--u-text);
+  word-break: break-all;
+}
+
+.stats {
+  font-size: var(--u-fs-xs);
+  color: var(--u-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--u-space-2);
+}
+
+.test {
+  background-color: transparent;
+  border: 1px solid var(--u-border-strong);
+  border-radius: var(--u-radius-md);
+  padding: var(--u-space-1) var(--u-space-3);
+  font-size: var(--u-fs-sm);
+  color: var(--u-text);
+  cursor: pointer;
+}
+
+.test:hover:not(:disabled) {
+  background-color: var(--u-surface-2);
+}
+
+.test:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

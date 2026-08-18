@@ -1,0 +1,186 @@
+# Local geliştirme ortamı.
+#
+#   cp .env.example .env
+#   docker compose up -d          # postgres + migration + api + worker
+#   pnpm dev                      # web (:3100) host'ta, hot reload ile
+#
+# Redis YOK: zamanlama Postgres'in `FOR UPDATE SKIP LOCKED` mekanizmasıyla
+# yapılıyor (bkz. docs/0.2-tech-stack.md §5). Kullanılmayan bir altyapı
+# servisi taşımıyoruz.
+
+name: uptime-mini
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-uptime}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-uptime_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-uptime_mini}
+    ports:
+      # Host tarafında 5433: 5432'de zaten bir Postgres çalışıyor olabilir
+      # (ör. canny-mini). İki proje aynı anda ayakta kalabilsin.
+      - '${POSTGRES_PORT:-5433}:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # Diğer servisler "port açıldı" anında değil, veritabanı GERÇEKTEN
+      # sorgu kabul ettiğinde başlasın.
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${POSTGRES_USER:-uptime} -d ${POSTGRES_DB:-uptime_mini}',
+        ]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # Tek seferlik migration servisi. api/worker açılışta migration
+  # ÇALIŞTIRMAZ: iki süreç aynı anda kalkarsa yarış oluşur ve "uygulama
+  # başlarken şema değiştirmek" geri alınması zor bir davranıştır.
+  migrate:
+    build:
+      context: ./backend
+      args:
+        BINARY: migrate
+    command: ['up']
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgres://${POSTGRES_USER:-uptime}:${POSTGRES_PASSWORD:-uptime_dev_password}@postgres:5432/${POSTGRES_DB:-uptime_mini}?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: 'no'
+
+  # DEMO VERİSİ — PROFİLLİ, yani düz `docker compose up` bunu ÇALIŞTIRMAZ:
+  #
+  #   docker compose --profile seed run --rm seed
+  #
+  # Neden var (7.5'in bulgusu): `pnpm db:seed` `go run` ile çalışıyor, yani
+  # demo verisi Go kurulumu gerektiriyordu. GÜNCEL DURUM §3'ün sözü ise
+  # "GitHub'dan indiren biri (ör. bir mülakatçı) `docker compose up` + `pnpm
+  # dev` ile ayağa kaldırabilmeli" — ve boş bir pano ürünü anlatmıyor. Dördüncü
+  # imaj aynı Dockerfile'ın BINARY argümanıyla üretiliyor, yeni bir dosya yok.
+  #
+  # `-reset` ile çalışıyor: mülakatçı komutu iki kez çalıştırdığında çakışma
+  # hatası değil, temiz bir demo görmeli. Silinen tek şey demo organizasyonu
+  # (bkz. internal/seed → Options.Reset).
+  seed:
+    profiles: ['seed']
+    build:
+      context: ./backend
+      args:
+        BINARY: seed
+    command: ['-reset']
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgres://${POSTGRES_USER:-uptime}:${POSTGRES_PASSWORD:-uptime_dev_password}@postgres:5432/${POSTGRES_DB:-uptime_mini}?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+      # Migration'lardan SONRA: uygulanmamış bir şemaya seed atmak, hatanın
+      # sebebini gizleyen bir çakışma yığını üretirdi.
+      migrate:
+        condition: service_completed_successfully
+    restart: 'no'
+
+  api:
+    build:
+      context: ./backend
+      args:
+        BINARY: api
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      API_PORT: 3400
+      DATABASE_URL: postgres://${POSTGRES_USER:-uptime}:${POSTGRES_PASSWORD:-uptime_dev_password}@postgres:5432/${POSTGRES_DB:-uptime_mini}?sslmode=disable
+      API_DB_MAX_CONNS: ${API_DB_MAX_CONNS:-10}
+      WEB_ORIGINS: ${WEB_ORIGINS:-http://localhost:3100}
+      # `X-Forwarded-For` başlığına güvenilecek kaynaklar (7.5). BOŞ = hiçbiri;
+      # kimlik ham TCP adresi kalıyor (0.4'ün RealIP kararı).
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-}
+      # SSRF korumasının kapısı (7.4). Varsayılan KAPALI: koruma açık.
+      # Yalnızca APP_ENV AÇIKÇA development|test iken etkili.
+      CHECKER_ALLOW_PRIVATE_TARGETS: ${CHECKER_ALLOW_PRIVATE_TARGETS:-false}
+      # Placeholder değerlerle gelirse api geliştirme ortamında geçici bir
+      # anahtar üretir ve uyarır; APP_ENV=production ise boot etmez
+      # (bkz. .env.example → Sırlar).
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET:-}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      REFRESH_TOKEN_TTL: ${REFRESH_TOKEN_TTL:-720h}
+    ports:
+      - '${API_PORT:-3400}:3400'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      # /health (liveness) kullanılıyor, /ready değil: readiness veritabanına
+      # bakar ve DB düştüğünde konteyner "unhealthy" sayılıp yeniden
+      # başlatılırdı — oysa yeniden başlatmak veritabanını geri getirmez.
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3400/health',
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  worker:
+    build:
+      context: ./backend
+      args:
+        BINARY: worker
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: postgres://${POSTGRES_USER:-uptime}:${POSTGRES_PASSWORD:-uptime_dev_password}@postgres:5432/${POSTGRES_DB:-uptime_mini}?sslmode=disable
+      WORKER_DB_MAX_CONNS: ${WORKER_DB_MAX_CONNS:-5}
+      # SSRF korumasının kapısı (7.4) — kontrolleri worker atıyor.
+      CHECKER_ALLOW_PRIVATE_TARGETS: ${CHECKER_ALLOW_PRIVATE_TARGETS:-false}
+      # Zamanlanmış kontroller (3.2): tur aralığı ve eşzamanlı kontrol sınırı.
+      WORKER_SCHEDULER_PERIOD: ${WORKER_SCHEDULER_PERIOD:-5s}
+      WORKER_MAX_CONCURRENT_CHECKS: ${WORKER_MAX_CONCURRENT_CHECKS:-10}
+      WORKER_DB_PROBE_PERIOD: ${WORKER_DB_PROBE_PERIOD:-30s}
+      # Toplulaştırma ve budama (3.4).
+      WORKER_ROLLUP_PERIOD: ${WORKER_ROLLUP_PERIOD:-5m}
+      WORKER_RETENTION_PERIOD: ${WORKER_RETENTION_PERIOD:-1h}
+      RAW_RETENTION_DAYS: ${RAW_RETENTION_DAYS:-30}
+      WORKER_HEARTBEAT_PERIOD: ${WORKER_HEARTBEAT_PERIOD:-10s}
+      # Kapanma sinyalinden sonra devam eden job'lara tanınan süre.
+      # Aşağıdaki stop_grace_period'dan KISA olmalı (8s drain + 2s iptal payı
+      # < 15s), yoksa süreç toparlanmayı bitirmeden SIGKILL alır.
+      SHUTDOWN_TIMEOUT: ${WORKER_SHUTDOWN_TIMEOUT:-8s}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    # worker api'ye BAĞIMLI DEĞİL: api kapalıyken de çalışır, ayrı ayrı
+    # yeniden başlatılabilir/ölçeklenebilirler (Faz 3.1'in "ayrı süreç"
+    # gerekçesi: ölçeklendirme, api gecikmesini etkilememe, ayrı deploy).
+    healthcheck:
+      # worker'ın HTTP portu YOK, yani api gibi `wget /health` ile
+      # yoklanamıyor. Binary'nin kendi `healthcheck` alt komutu, runtime'ın
+      # periyodik yazdığı KALP ATIŞI DOSYASININ tazeliğine bakıyor: donmuş bir
+      # worker "running" görünmeye devam etmesin.
+      #
+      # Veritabanına BAKMIYOR (liveness ≠ readiness, 0.3): DB düştüğünde
+      # worker'ı yeniden başlatmak DB'yi geri getirmez, sadece kesintiyi uzatır.
+      test: ['CMD', '/app/app', 'healthcheck']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    # Varsayılan 10 saniye, worker'ın drain süresiyle (8s) neredeyse eşitti:
+    # devam eden bir kontrol bitmek üzereyken SIGKILL yemesin.
+    stop_grace_period: 15s
+
+volumes:
+  postgres-data:

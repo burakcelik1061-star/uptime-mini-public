@@ -1,0 +1,80 @@
+@import '../styles/tokens.css';
+
+/**
+ * Temel stiller. Tailwind YOK (bkz. docs/0.2-design-system.md): bu projenin
+ * zor görsel parçaları (90 günlük uptime barları, sparkline, incident
+ * timeline, yoğun durum tabloları) zaten custom yazılacak; utility sınıfları
+ * orada yardım etmiyordu. Komponent stilleri CSS Modules ile, renkler/ölçüler
+ * yalnızca token'lardan.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--u-bg);
+  color: var(--u-text);
+  font-family: var(--u-font-sans);
+  font-size: var(--u-fs-md);
+  line-height: var(--u-lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--u-lh-tight);
+  font-weight: var(--u-fw-semibold);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--u-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Odak halkası her yerde aynı ve GÖRÜNÜR: klavyeyle gezen kullanıcı
+   nerede olduğunu kaybetmemeli. */
+:focus-visible {
+  outline: var(--u-focus-ring);
+  outline-offset: var(--u-focus-offset);
+  border-radius: var(--u-radius-sm);
+}
+
+/* Sayısal veri her yerde mono ve sabit genişlikli rakamlarla. */
+.tabularNumbers {
+  font-family: var(--u-font-mono);
+  font-variant-numeric: tabular-nums;
+}

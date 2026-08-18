@@ -1,0 +1,38 @@
+# bağımlılıklar
+node_modules/
+
+# build çıktıları
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# turborepo
+.turbo/
+
+# test & coverage
+coverage/
+playwright-report/
+test-results/
+# E2E'nin derlediği api/worker/migrate binary'leri (7.2)
+e2e/.bin/
+
+# ortam değişkenleri (0.3'te .env.example eklenecek — o örnek dosya commit'lenir)
+.env
+.env.*
+!.env.example
+
+# log
+*.log
+logs/
+
+# editör / işletim sistemi
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Go
+backend/bin/
+*.exe
